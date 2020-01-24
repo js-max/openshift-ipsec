@@ -1,33 +1,33 @@
 ---
-
 - name: Install packages
   include: ipsec-install.yml
   tags:
     - install
 
-# Generate certificate authority for cluster.
-- when: inventory_hostname == groups['masters'][0]
-  static: no
+- name: Generate certificate authority for cluster.
+  when: inventory_hostname == groups['masters'][0]
   include: init-ipsec-ca.yml
+  tags:
+    - ca
 
-# Create IPSec host certificate.
-- when: inventory_hostname == groups['masters'][0]
-  static: no
+- name: Create IPSec host certificate.
+  when: inventory_hostname == groups['masters'][0]
   include: init-ipsec-host-cert.yml
   with_items: "{{ play_hosts }}"
   loop_control:
     loop_var: ipsec_hostname
+  tags:
+    - certs
 
-# Configure ipsec service on host
-- include: init-ipsec-host.yml
+- name: Configure ipsec service on host
+  include: init-ipsec-host.yml
+  tags:
+    - config
 
-# Create Connection policies
-# This was for opportunistic IPSec, not used for non-opportunistic
-- include: init-ipsec-host-connections.yml
-
-# Openshift >= 3.7 default SHOULD BE firewalld
-# Configure firewalld to permit IPsec communication
-- include: firewalld-setup-rules.yml
+- name: Create Connection policies, this was for opportunistic IPSec, not used for non-opportunistic
+  include: init-ipsec-host-connections.yml
+  tags:
+    - connections
 
 - name: Configure firewalld if enabled
   include: network-firewalld-config.yml
