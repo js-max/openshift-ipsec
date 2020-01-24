@@ -73,7 +73,7 @@ BSD
 Author Information
 ------------------
 
-Joao Santos (morgado.santos@gmail.com)
-Kevin Chung (kevin.chung@redhat.com)
-Johnathan Kupferer (jkupfere@redhat.com)
-Freddy Montero (fmontero@redhat.com)
+* Joao Santos (morgado.santos@gmail.com)
+* Kevin Chung (kevin.chung@redhat.com)
+* Johnathan Kupferer (jkupfere@redhat.com)
+* Freddy Montero (fmontero@redhat.com)
