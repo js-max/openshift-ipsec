@@ -29,6 +29,18 @@
 # Configure firewalld to permit IPsec communication
 - include: firewalld-setup-rules.yml
 
+- name: Configure firewalld if enabled
+  include: network-firewalld-config.yml
+  when: os_firewall_use_firewalld|bool == true
+  tags:
+    - firewalld
+
+- name: Configure iptables if enabled
+  include: network-iptables-config.yml
+  when: os_firewall_use_firewalld|bool == false
+  tags:
+    - iptables
+
 - name: Check connectivity
   include: ipsec-ping.yml
   tags:
