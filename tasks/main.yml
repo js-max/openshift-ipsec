@@ -28,3 +28,8 @@
 # Openshift >= 3.7 default SHOULD BE firewalld
 # Configure firewalld to permit IPsec communication
 - include: firewalld-setup-rules.yml
+
+- name: Check connectivity
+  include: ipsec-ping.yml
+  tags:
+    - ping
