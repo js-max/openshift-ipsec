@@ -1,0 +1,15 @@
+---
+- name: Add rules to iptables
+  lineinfile:
+    path: /etc/sysconfig/iptables
+    insertbefore: 'COMMIT'
+    line: '{{ item }}'
+  with_items:
+    - -A OS_FIREWALL_ALLOW -p 50 -j ACCEPT
+    - -A OS_FIREWALL_ALLOW -p 51 -j ACCEPT
+    - -A OS_FIREWALL_ALLOW -p udp --dport 500 -j ACCEPT
+
+- name: Reload service iptables
+  systemd:
+    name: iptables
+    state: reloaded

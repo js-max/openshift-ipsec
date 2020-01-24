@@ -1,17 +1,4 @@
-### DESCRIPTION
-#
-# Configure firewall settings for IPSec communication using
-# firewalld
-#
-### VARIABLES
-#
-# none
-#
-### DEPENDENCIES
-#
-# none
-#
-
+---
 - name: Unmask Firewalld
   systemd:
     name: firewalld

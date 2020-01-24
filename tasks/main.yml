@@ -1,35 +1,47 @@
 ---
-# Install libreswan package on every host.
-- name: Install libreswan
-  yum:
-    name: libreswan
-    state: present
+- name: Install packages
+  include: ipsec-install.yml
+  tags:
+    - install
 
-- name: Enable IPSec Daemon
-  service:
-    name: ipsec
-    enabled: yes
-
-# Generate certificate authority for cluster.
-- when: inventory_hostname == groups['masters'][0]
-  static: no
+- name: Generate certificate authority for cluster.
+  when: inventory_hostname == groups['masters'][0]
   include: init-ipsec-ca.yml
+  tags:
+    - ca
 
-# Create IPSec host certificate.
-- when: inventory_hostname == groups['masters'][0]
-  static: no
+- name: Create IPSec host certificate.
+  when: inventory_hostname == groups['masters'][0]
   include: init-ipsec-host-cert.yml
   with_items: "{{ play_hosts }}"
   loop_control:
     loop_var: ipsec_hostname
+  tags:
+    - certs
 
-# Configure ipsec service on host
-- include: init-ipsec-host.yml
+- name: Configure ipsec service on host
+  include: init-ipsec-host.yml
+  tags:
+    - config
 
-# Create Connection policies
-# This was for opportunistic IPSec, not used for non-opportunistic
-- include: init-ipsec-host-connections.yml
+- name: Create Connection policies, this was for opportunistic IPSec, not used for non-opportunistic
+  include: init-ipsec-host-connections.yml
+  tags:
+    - connections
 
-# Openshift >= 3.7 default SHOULD BE firewalld
-# Configure firewalld to permit IPsec communication
-- include: firewalld-setup-rules.yml
+- name: Configure firewalld if enabled
+  include: network-firewalld-config.yml
+  when: os_firewall_use_firewalld|bool == true
+  tags:
+    - firewalld
+
+- name: Configure iptables if enabled
+  include: network-iptables-config.yml
+  when: os_firewall_use_firewalld|bool == false
+  tags:
+    - iptables
+
+- name: Check connectivity
+  include: ipsec-ping.yml
+  tags:
+    - ping

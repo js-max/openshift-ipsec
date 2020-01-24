@@ -1,3 +1,5 @@
 ---
 # defaults file for openshift-ipsec
 ipsec_ca_dir: /etc/ipsec-ca
+ipsec_configuration: nonopportunistic
+os_firewall_use_firewalld: false
