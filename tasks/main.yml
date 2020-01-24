@@ -1,14 +1,9 @@
 ---
-# Install libreswan package on every host.
-- name: Install libreswan
-  yum:
-    name: libreswan
-    state: present
 
-- name: Enable IPSec Daemon
-  service:
-    name: ipsec
-    enabled: yes
+- name: Install packages
+  include: ipsec-install.yml
+  tags:
+    - install
 
 # Generate certificate authority for cluster.
 - when: inventory_hostname == groups['masters'][0]

@@ -1,0 +1,10 @@
+---
+- name: Install libreswan
+  yum:
+    name: libreswan
+    state: present
+
+- name: Enable IPSec Daemon
+  service:
+    name: ipsec
+    enabled: yes
